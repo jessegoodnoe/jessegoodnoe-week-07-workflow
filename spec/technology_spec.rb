@@ -22,7 +22,7 @@ describe "states" do
       expect { subject.publish! }.to raise_error
     end
     it "should tell us it is approved" do
-      expect { subject.approve!}.to_s == "technology is approved"
+      subject.approve!.should == "technology is approved"
     end
     it "can be set back to unapproved" do
       subject.approve!
@@ -33,7 +33,8 @@ describe "states" do
       subject.approve!
       subject.current_state.events.should have_key(:publish)
       subject.current_state.events.should have_key(:unapprove)
-      subject.current_state.events.keys.should == [:publish,:unapprove]
+      subject.current_state.events.should have_key(:patent)
+      subject.current_state.events.keys.should == [:publish,:unapprove,:patent]
     end
   end
 
@@ -45,5 +46,22 @@ describe "states" do
     end
   end
 
-  
+  context "when patented" do
+    it "is patented" do
+      subject.approve!
+      subject.patent!
+      subject.current_state.to_s.should == "patented"
+    end
+    
+    it "when patented, it should tell us to pay up or be sued" do
+      subject.approve!
+      subject.patent!.should == "pay up or be sued"
+    end
+    
+    it "available event should be retire" do
+      subject.approve!
+      subject.patent!
+      subject.current_state.events.should have_key(:retire)
+    end
+  end  
 end

@@ -14,15 +14,19 @@ class Technology
     state :approved do
       event :publish, :transitions_to => :published
       event :unapprove, :transitions_to => :unapproved
+      event :patent, :transitions_to => :patented
     end
     state :published do
+      event :retire,  :transitions_to => :retired
+    end
+    state :patented do
       event :retire,  :transitions_to => :retired
     end
     state :retired
   end
  
   def approve
-    puts 'technology is approved'
+    'technology is approved'
     # send an email or log to a file
   end
 
@@ -34,8 +38,11 @@ class Technology
     puts 'technology is published'
   end
   
-  def retire
-    puts 'technology is retired'
+  def patent
+    'pay up or be sued'
   end
   
+  def retire
+    'technology is retired'
+  end
 end
